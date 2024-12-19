@@ -1,0 +1,7 @@
+mkdir mon-projet-express
+cd mon-projet-express
+npm init -y  # Initialise un projet Node.js
+npm install express pg  # Installe Express et le connecteur PostgreSQL
+
+
+lancer le serveur : node server.js
