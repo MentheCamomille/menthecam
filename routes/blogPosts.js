@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
   });
 });
 
-// Ajouter un nouvel article de blog
+// Ajouter un nouvel article
 router.post('/', (req, res) => {
   const { title, content, author } = req.body;
   const query = `

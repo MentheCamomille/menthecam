@@ -43,4 +43,18 @@ router.post('/', (req, res) => {
   });
 });
 
+// Récupérer les articles d'une commande
+router.get('/:orderId/items', (req, res) => {
+  const { orderId } = req.params;
+  const query = 'SELECT * FROM Order_Items WHERE order_id = $1';
+  
+  client.query(query, [orderId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Erreur lors de la récupération des articles de commande');
+    }
+    res.json(result.rows);
+  });
+});
+
 module.exports = router;
