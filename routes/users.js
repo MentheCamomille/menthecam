@@ -11,39 +11,33 @@ const client = new Client({
 
 client.connect();
 
-// Récupérer un utilisateur par son ID
-router.get('/:userId', (req, res) => {
-  const { userId } = req.params;
-  const query = 'SELECT * FROM Users WHERE id = $1';
+// Récupérer tous les utilisateurs
+router.get('/', (req, res) => {
+  const query = 'SELECT * FROM Users';
   
-  client.query(query, [userId], (err, result) => {
+  client.query(query, (err, result) => {
     if (err) {
       console.error(err);
-      return res.status(500).send('Erreur lors de la récupération de l\'utilisateur');
+      return res.status(500).send('Erreur lors de la récupération des utilisateurs');
     }
-    if (result.rows.length === 0) {
-      return res.status(404).send('Utilisateur non trouvé');
-    }
-    res.json(result.rows[0]);
+    res.json(result.rows);
   });
 });
 
-// Créer un nouvel utilisateur
-router.post('/', (req, res) => {
-  const { username, email, password } = req.body;
-  const query = `
-    INSERT INTO Users (username, email, password)
-    VALUES ($1, $2, $3) RETURNING *;
-  `;
-  const values = [username, email, password];
-  
-  client.query(query, values, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Erreur lors de la création de l\'utilisateur');
-    }
-    res.status(201).json(result.rows[0]);
-  });
+
+// Ajouter un utilisateur
+router.post('/', async (req, res) => {
+  const { username, email } = req.body; // Assurez-vous que le corps de la requête contient ces champs
+  try {
+    const result = await client.query(
+      'INSERT INTO Users (username, email) VALUES ($1, $2) RETURNING *',
+      [username, email]
+    );
+    res.status(201).json(result.rows[0]); // Retourne l'utilisateur créé
+  } catch (err) {
+    console.error('Erreur lors de la création de l’utilisateur:', err);
+    res.status(500).send('Erreur serveur');
+  }
 });
 
 // Mettre à jour un utilisateur

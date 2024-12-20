@@ -32,7 +32,7 @@ app.use(express.json());
 // Routes
 app.use('/products', productsRoutes);
 app.use('/orders', ordersRoutes);
-app.use('/users', usersRoutes);
+app.use('/api/users', usersRoutes);
 app.use('/blog', blogPostsRoutes);
 app.use('/favorites', favoritesRoutes);
 app.use('/notifications', notificationsRoutes);
