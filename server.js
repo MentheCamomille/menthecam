@@ -2,12 +2,15 @@ require('dotenv').config();
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
+  user: 'root', // Remplacez par le nom d'utilisateur PostgreSQL
+  host: 'localhost', // Hôte par défaut
+  database: 'menthecamomille', // Nom de la base de données
+  password: 'root', // Mot de passe correct
+  port: 5432, // Port par défaut
 });
+
+
+module.exports = pool;
 
 // Test de connexion
 pool.connect()
@@ -35,6 +38,6 @@ app.use('/favorites', favoritesRoutes);
 app.use('/notifications', notificationsRoutes);
 
 // Démarrer le serveur
-app.listen(3001, () => {
+app.listen(3000, () => {
   console.log('Serveur Express lancé sur le port 3000');
 });

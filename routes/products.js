@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { Client } = require('pg');
 const client = new Client({
-  user: 'ton_user',
-  host: 'localhost',
-  database: 'ton_db',
-  password: 'ton_mot_de_passe',
-  port: 5432,
+  user: 'root', // Remplacez par le nom d'utilisateur PostgreSQL
+  host: 'localhost', // Hôte par défaut
+  database: 'menthecamomille', // Nom de la base de données
+  password: 'root', // Mot de passe correct
+  port: 5432, // Port par défaut
 });
 
 client.connect();
