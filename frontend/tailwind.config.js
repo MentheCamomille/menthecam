@@ -1,13 +1,16 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'], // Répertoire React
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
   theme: {
     extend: {
       colors: {
-        mint: '#C3E3D5', // Vert menthe pâle
-        cream: '#FFF9E5', // Crème
+        "mint-500": "#98FB98", // Vert menthe pâle
+        "mint-700": "#66CDAA", // Vert menthe foncé
+        "cream-100": "#FFFDD0", // Crème clair
       },
     },
   },
   plugins: [],
-}
+};
