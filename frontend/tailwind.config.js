@@ -1,14 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}", // Parcourt tes fichiers React
   ],
   theme: {
     extend: {
       colors: {
-        "mint-500": "#98FB98", // Vert menthe pâle
-        "mint-700": "#66CDAA", // Vert menthe foncé
-        "cream-100": "#FFFDD0", // Crème clair
+        mint: '#A8E6CF', // Vert menthe pâle
+        cream: '#FFFDD0', // Crème
+        dark: '#333333', // Couleur sombre pour le texte ou autres éléments
       },
     },
   },
