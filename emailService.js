@@ -5,7 +5,7 @@ const sendEmail = async (to, subject, text, html) => {
     try {
         const msg = {
             to,
-            from: 'menthecam@gmail.com', // Utilise l'email validé dans SendGrid
+            from: 'menthecam@gmail.com', //sendgrid email
             subject,
             text,
             html
