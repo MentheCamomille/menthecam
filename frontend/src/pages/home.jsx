@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Carousel from '../components/Carousel';
-import AOS from 'aos'; // Importation de la bibliothèque AOS
-import 'aos/dist/aos.css'; // Importation du fichier CSS d'AOS
+import AOS from 'aos'; 
+import 'aos/dist/aos.css'; 
 
 const Home = () => {
 
