@@ -1,34 +1,20 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+// src/components/header.jsx
+import React from 'react';
 
-function Header() {
-  const { user, logout } = useContext(AuthContext);
-
+const Header = () => {
   return (
-    <header className="bg-mint text-dark py-4 px-6">
-      <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold">Menthecamomille</h1>
-        <nav className="space-x-4">
-          {user ? (
-            <>
-              <span>Bienvenue, {user.username}</span>
-              <button onClick={logout} className="hover:underline">
-                Déconnexion
-              </button>
-            </>
-          ) : (
-            <>
-              <a href="/login" className="hover:underline">
-                Connexion
-              </a>
-            </>
-          )}
-        </nav>
-      </div>
+    <header className="flex items-center justify-between px-8 py-4 bg-white shadow">
+      <div className="text-2xl font-bold text-green-600">Menthecamomille</div>
+      <nav className="flex space-x-6">
+        <a href="/" className="hover:text-green-600">Accueil</a>
+        <a href="/about" className="hover:text-green-600">A propos</a>
+        <a href="/blog" className="hover:text-green-600">Blog</a>
+        <a href="/products" className="hover:text-green-600">Produits</a>
+      </nav>
+      <button className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700">Connexion</button>
+     
     </header>
   );
-}
+};
 
 export default Header;
