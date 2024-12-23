@@ -1,10 +1,23 @@
+import React, { useEffect } from 'react';
+import Carousel from '../components/Carousel';
+import AOS from 'aos'; // Importation de la bibliothèque AOS
+import 'aos/dist/aos.css'; // Importation du fichier CSS d'AOS
+
 const Home = () => {
+
+  useEffect(() => {
+    AOS.init({ duration: 1000 }); // Initialisation de AOS avec une durée de 1 seconde pour les animations
+  }, []);
+
   return (
     <>
 
       <main className="bg-white text-gray-900">
         {/* Section Bienvenue */}
-        <section className="text-center py-16 bg-gradient-to-b from-green-50 to-white">
+        <section
+          className="text-center py-16 bg-gradient-to-b from-green-50 to-white"
+          data-aos="fade-up" // Animation AOS ici
+        >
           <h1 className="text-4xl font-bold text-green-700">Bienvenue chez Menthecamomille</h1>
           <p className="mt-4 text-lg text-gray-700">Plongez dans un univers doux avec nos peluches artisanales, créatives et remplies de tendresse.</p>
           <div className="mt-6 flex justify-center gap-4">
@@ -14,7 +27,10 @@ const Home = () => {
         </section>
 
         {/* Section Caractéristiques */}
-        <section className="py-12">
+        <section
+          className="py-12"
+          data-aos="fade-up" // Animation AOS ici
+        >
           <h2 className="text-3xl font-bold text-center text-green-700">Les Caractéristiques Uniques</h2>
           <div className="mt-8 flex justify-around text-center">
             <div>
@@ -32,19 +48,22 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Section Galerie */}
-        <section className="py-12 bg-green-50">
+        {/* Section Galerie (Carrousel) */}
+        <section
+          className="py-12 bg-green-50"
+          data-aos="fade-up" // Animation AOS ici
+        >
           <h2 className="text-3xl font-bold text-center text-green-700">Galerie de Nos Peluches</h2>
-          <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4 px-8">
-            <img src="image1.jpg" alt="Peluches 1" className="rounded-xl" />
-            <img src="image2.jpg" alt="Peluches 2" className="rounded-xl" />
-            <img src="image3.jpg" alt="Peluches 3" className="rounded-xl" />
-            <img src="image4.jpg" alt="Peluches 4" className="rounded-xl" />
+          <div className="mt-8">
+            <Carousel />
           </div>
         </section>
 
         {/* Section Contact */}
-        <section className="py-12">
+        <section
+          className="py-12"
+          data-aos="fade-up" // Animation AOS ici
+        >
           <h2 className="text-3xl font-bold text-center text-green-700">Prêt à Découvrir Plus ?</h2>
           <p className="text-center text-gray-700 mt-4">Rejoignez notre univers enchanté de peluches personnalisées.</p>
           <div className="mt-6 flex justify-center gap-4">
