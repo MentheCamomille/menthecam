@@ -1,81 +1,65 @@
+// server/routes/users.js
 const express = require('express');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const pool = require('../db');
 const router = express.Router();
-const { Client } = require('pg');
-const client = new Client({
-  user: 'root', 
-  host: 'localhost', 
-  database: 'menthecamomille', 
-  password: 'root', 
-  port: 5432, 
-});
 
-client.connect();
-
-// Récupérer tous les utilisateurs
-router.get('/', (req, res) => {
-  const query = 'SELECT * FROM Users';
+// Route pour l'inscription
+router.post('/signup', async (req, res) => {
+  const { name, email, password } = req.body;
   
-  client.query(query, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Erreur lors de la récupération des utilisateurs');
-    }
-    res.json(result.rows);
-  });
-});
-
-
-// Ajouter un utilisateur
-router.post('/', async (req, res) => {
-  const { username, email } = req.body; // Assurez-vous que le corps de la requête contient ces champs
   try {
-    const result = await client.query(
-      'INSERT INTO Users (username, email) VALUES ($1, $2) RETURNING *',
-      [username, email]
+    // Vérification si l'email existe déjà
+    const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (userExists.rows.length > 0) {
+      return res.status(400).json({ message: 'Cet email est déjà utilisé' });
+    }
+
+    // Hachage du mot de passe
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Insertion de l'utilisateur dans la base de données
+    const newUser = await pool.query(
+      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
+      [name, email, hashedPassword]
     );
-    res.status(201).json(result.rows[0]); // Retourne l'utilisateur créé
+
+    // Création du token JWT
+    const token = jwt.sign({ id: newUser.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.status(201).json({ message: 'Utilisateur créé avec succès', token });
   } catch (err) {
-    console.error('Erreur lors de la création de l’utilisateur:', err);
-    res.status(500).send('Erreur serveur');
+    console.error(err);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
   }
 });
 
-// Mettre à jour un utilisateur
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const { username, email, password } = req.body;
-  const query = `
-    UPDATE Users 
-    SET username = $1, email = $2, password = $3
-    WHERE id = $4 RETURNING *;
-  `;
-  const values = [username, email, password, id];
-  
-  client.query(query, values, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Erreur lors de la mise à jour de l\'utilisateur');
-    }
-    if (result.rows.length === 0) {
-      return res.status(404).send('Utilisateur non trouvé');
-    }
-    res.json(result.rows[0]);
-  });
-});
+// Route pour la connexion
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-// Supprimer un utilisateur
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  client.query('DELETE FROM Users WHERE id = $1 RETURNING *;', [id], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Erreur lors de la suppression de l\'utilisateur');
+  try {
+    // Recherche de l'utilisateur par email
+    const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (user.rows.length === 0) {
+      return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
     }
-    if (result.rows.length === 0) {
-      return res.status(404).send('Utilisateur non trouvé');
+
+    // Vérification du mot de passe
+    const validPassword = await bcrypt.compare(password, user.rows[0].password);
+    if (!validPassword) {
+      return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
     }
-    res.json({ message: 'Utilisateur supprimé avec succès' });
-  });
+
+    // Création du token JWT
+    const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.status(200).json({ message: 'Connexion réussie', token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
 });
 
 module.exports = router;
