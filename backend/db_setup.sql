@@ -1,4 +1,3 @@
--- Création des tables
 CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -66,7 +65,6 @@ CREATE TABLE Notifications (
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
--- Trigger pour mettre à jour automatiquement "updated_at"
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -75,7 +73,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Ajout du trigger sur chaque table qui nécessite "updated_at"
 CREATE TRIGGER trigger_users_updated_at
 BEFORE UPDATE ON Users
 FOR EACH ROW

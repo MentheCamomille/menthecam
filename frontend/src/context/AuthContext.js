@@ -1,35 +1,28 @@
-import React, { createContext, useState, useEffect } from 'react';
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User'); // Assurez-vous que le modèle est correct
 
-// Création du contexte
-export const AuthContext = createContext();
+const login = async (req, res) => {
+  const { username, password } = req.body;
 
-// Fournisseur du contexte
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // État de l'utilisateur
-  const [loading, setLoading] = useState(true);
-
-  // Simulation de la récupération de l'utilisateur (peut être remplacée par une API)
-  useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem('user'));
-    if (loggedInUser) {
-      setUser(loggedInUser);
+  try {
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
-    setLoading(false);
-  }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(401).json({ message: 'Mot de passe incorrect' });
+    }
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-  };
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-  return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return res.json({ message: 'Connexion réussie', token });
+  } catch (error) {
+    console.error('Erreur lors de la connexion:', error);
+    return res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
 };
+
+module.exports = { login };

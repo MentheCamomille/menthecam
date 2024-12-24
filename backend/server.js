@@ -1,27 +1,32 @@
-require('dotenv').config();
+require('dotenv').config(); // Pour charger les variables d'environnement
 const express = require('express');
-const pool = require('./server');
-const productsRoutes = require('./routes/products');
-const ordersRoutes = require('./routes/orders');
-const usersRoutes = require('./routes/users');
-const blogPostsRoutes = require('./routes/blogPosts');
-const favoritesRoutes = require('./routes/favorites');
-const notificationsRoutes = require('./routes/notifications');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const pool = require('./db'); // Importe le fichier db.js qui contient la connexion à PostgreSQL
+const usersRoutes = require('./routes/users'); // Importation des routes pour les utilisateurs
+const authRoutes = require('./routes/auth'); // Importation des routes pour l'authentification
+const sequelize = require('./config/database');
 
-const app = express();
+const app = express(); // Déclaration de l'objet app avec express()
+
+
+const cors = require('cors');
+
+// Middleware CORS
+app.use(cors());
 
 // Middleware pour traiter les requêtes JSON
 app.use(express.json());
 
 // Routes
-app.use('/products', productsRoutes);
-app.use('/orders', ordersRoutes);
-app.use('/api/users', usersRoutes); // Routes d'authentification
-app.use('/blog', blogPostsRoutes);
-app.use('/favorites', favoritesRoutes);
-app.use('/notifications', notificationsRoutes);
+app.use('/api/users', usersRoutes); // Utilisation de la route des utilisateurs
+app.use('/api/auth', authRoutes); // Utilisation de la route pour l'authentification
 
-// Démarrer le serveur
+sequelize.sync()
+  .then(() => console.log('Base de données synchronisée'))
+  .catch((err) => console.error('Erreur de synchronisation:', err));
+
+// Log pour confirmer que le serveur démarre
 app.listen(3000, () => {
   console.log('Serveur Express lancé sur le port 3000');
 });

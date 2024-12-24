@@ -1,32 +1,40 @@
 // src/pages/SignUp.jsx
 import React, { useState } from 'react';
-import axios from '../utils/axios';
+import axios from 'axios';
 
 const SignUp = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post('/api/users/signup', { name, email, password });
-      console.log(response.data);
-      // Gérer la redirection ou afficher un message de succès
+      const response = await axios.post('http://localhost:3000/signup', {
+        username,
+        email,
+        password,
+      });
+
+      console.log('Utilisateur créé', response.data);
+      // Tu peux aussi rediriger vers la page de connexion ou autre
     } catch (err) {
-      console.error('Erreur lors de l\'inscription :', err);
+      setError(err.response?.data?.message || 'Une erreur est survenue');
+      console.error('Erreur lors de l\'inscription:', err);
     }
   };
 
   return (
     <div>
-      <h1>Inscription</h1>
+      <h2>Inscription</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Nom"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="Nom d'utilisateur"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="email"
@@ -42,6 +50,7 @@ const SignUp = () => {
         />
         <button type="submit">S'inscrire</button>
       </form>
+      {error && <p>{error}</p>}
     </div>
   );
 };

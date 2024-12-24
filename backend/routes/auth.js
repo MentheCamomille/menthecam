@@ -1,5 +1,12 @@
 // server/middleware/auth.js
 const jwt = require('jsonwebtoken');
+const express = require('express');
+const router = express.Router();
+const { login } = require('../controllers/authController'); // Importation du contrôleur de connexion
+
+
+// Route de connexion
+router.post('/login', login);
 
 const authMiddleware = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -18,3 +25,4 @@ const authMiddleware = (req, res, next) => {
 };
 
 module.exports = authMiddleware;
+module.exports = router;
