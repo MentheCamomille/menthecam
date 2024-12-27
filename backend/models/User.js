@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database'); // Vérifie que le chemin est correct
 
+
+
 const User = sequelize.define('User', {
   id: {
     type: DataTypes.INTEGER,
