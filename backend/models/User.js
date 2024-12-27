@@ -1,8 +1,12 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');  // Assure-toi d'avoir la config de la DB ici
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Vérifie que le chemin est correct
 
 const User = sequelize.define('User', {
-  // Définition des champs de l'utilisateur
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   username: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -12,11 +16,16 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
+    validate: {
+      isEmail: true,
+    },
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+}, {
+  timestamps: true, // Ajoute createdAt et updatedAt automatiquement
 });
 
 module.exports = User;

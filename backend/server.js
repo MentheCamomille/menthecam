@@ -7,6 +7,7 @@ const usersRoutes = require('./routes/users'); // Importation des routes pour le
 const authRoutes = require('./routes/auth'); // Importation des routes pour l'authentification
 const sequelize = require('./config/database');
 
+
 const app = express(); // Déclaration de l'objet app avec express()
 
 
@@ -23,8 +24,8 @@ app.use('/api/users', usersRoutes); // Utilisation de la route des utilisateurs
 app.use('/api/auth', authRoutes); // Utilisation de la route pour l'authentification
 
 sequelize.sync()
-  .then(() => console.log('Base de données synchronisée'))
-  .catch((err) => console.error('Erreur de synchronisation:', err));
+  .then(() => console.log('Base de données synchronisée avec succès.'))
+  .catch((err) => console.error('Erreur lors de la synchronisation de la base de données :', err));
 
 // Log pour confirmer que le serveur démarre
 app.listen(3000, () => {
